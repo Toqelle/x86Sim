@@ -15,6 +15,8 @@ namespace CLI
             Console.WriteLine(CPU.Registers.BX);
 
 
+
+
         }
     }
 }

@@ -11,7 +11,7 @@ namespace x86
         readonly Registers Registers;
         readonly BusIU BusIU;
 
-        public Instructions (Registers registers, BusIU bus)
+        public Instructions(Registers registers, BusIU bus)
         {
             Registers = registers;
             BusIU = bus;
@@ -34,6 +34,18 @@ namespace x86
         {
             Registers.SaveRegisterValue(wordSize1, reg1, Registers.GetRegisterValue(wordSize2, reg2));
         }
+
+        public void MOV(int wordSize1, byte reg1, ushort value)
+        {
+            Registers.SaveRegisterValue(wordSize1, reg1, value);
+        }
+
+        public void MOV(int offset = 0, int value = 0)
+        {
+            BusIU.SaveWord(offset, (ushort)value);
+        }
+
+
 
 
 

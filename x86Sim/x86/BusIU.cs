@@ -129,6 +129,13 @@ namespace x86
             Ram[addr] = data.LO;
         }
 
+        
+        /// <summary>
+        /// To-do SaveWord with segment only
+        /// </summary>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+
         public ushort PopStack(int offset)
         {
             int addr = (SS << 4) + offset;
@@ -153,5 +160,5 @@ namespace x86
             Ram[addr] = reg.LO;
         }
 
-    }
+    }    
 }

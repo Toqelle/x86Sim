@@ -1,0 +1,100 @@
+﻿<Window x:Class="UIApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UIApp"
+        mc:Ignorable="d"
+        Title="x86 Simulator" Height="450" Width="765" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style x:Key="RegisterInputBox" TargetType="TextBox">
+            <Setter Property="Background" Value="#FFDEEEEA"/>
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF19456B"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="MinWidth" Value="80"/>
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="Foreground" Value="#FFF8F1F1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" Padding="3">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF11698E"/>
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="Foreground" Value="#FFF8F1F1" />
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style x:Key="Run" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="#FF054a29"/>
+            <Setter Property="FontSize" Value="20"/>
+
+            <Setter Property="FontFamily" Value="Consolas" />
+            <Setter Property="Foreground" Value="#FFF8F1F1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" Height="27" >
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FF137547"/>
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#FF231E23">
+        <Label Content="AX" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="AX_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_AX_TextBox" Margin="37,9,0,0"/>
+        <Label Content="BX" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="BX_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_BX_TextBox" Margin="37,39,0,0"/>
+        <Label Content="CX" HorizontalAlignment="Left" Margin="10,70,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="CX_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_CX_TextBox" Margin="37,69,0,0"/>
+        <Label Content="DX" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="DX_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_DX_TextBox" Margin="37,99,0,0"/>
+
+        <Label Content="DISP" HorizontalAlignment="Left" Margin="10,130,0,0" VerticalAlignment="Top"/>
+        <TextBox FontFamily="Consolas" FontSize="20" TextAlignment="Center" Background="#FFa4def9" MaxLength="4" MinWidth="60" Name="DISP_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_DISP_TextBox" Margin="59,130,0,0" Width="130"/>
+
+        <Button Content="Random" HorizontalAlignment="Left"  VerticalAlignment="Top" Click="Button_Random" Margin="10,160,0,0" Width="87"/>
+        <Button Content="Reset" HorizontalAlignment="Left" Click="Button_Reset" Margin="102,160,0,0" VerticalAlignment="Top" Width="87"/>
+
+        <Label Content="SI" HorizontalAlignment="Left" Margin="102,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="SI_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_SI_TextBox" Margin="129,9,0,0"/>
+        <Label Content="DI" HorizontalAlignment="Left" Margin="102,40,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="DI_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_DI_TextBox" Margin="129,39,0,0"/>
+        <Label Content="BP" HorizontalAlignment="Left" Margin="102,70,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="BP_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_BP_TextBox" Margin="129,69,0,0"/>
+        <Label Content="SP" HorizontalAlignment="Left" Margin="102,100,0,0" VerticalAlignment="Top"/>
+        <TextBox Style="{StaticResource RegisterInputBox}" MaxLength="4" MinWidth="60" Name="SP_TextBox" Text="0000"  HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top"  TextChanged="Reg_SP_TextBox" Margin="129,99,0,0"/>
+
+        <Label Content="CMD" HorizontalAlignment="Left" Margin="221,10,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="CMD_TextBox" Text="MOV AX, BX" FontFamily="Consolas" FontSize="21" TextAlignment="Left" Background="#FF000000" Foreground="Green" FontWeight="Black"    HorizontalAlignment="Left"  TextWrapping="Wrap" VerticalAlignment="Top" BorderThickness="0" Margin="221,161,0,0" Width="481" Height="28"/>
+        <TextBox Name ="ConsoleOutput_TextBlock" IsReadOnly="True" Text="Initializing..." ScrollViewer.VerticalScrollBarVisibility="Auto" FontSize="12" FontFamily="Consolas" Foreground="#FFFFFFFF" Background="#FF000000" HorizontalAlignment="Left" Margin="221,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="118" Width="514"/>
+        <Button Style="{StaticResource Run}" Content=">" HorizontalAlignment="Left" Click="Button_Run" Margin="707,161,0,0" VerticalAlignment="Top" Width="28" />
+    </Grid>
+</Window>
