@@ -60,7 +60,7 @@ namespace UIApp
         }
 
 
-        
+
 
         private void Reg_AX_TextBox(object sender, TextChangedEventArgs e)
         {
@@ -218,7 +218,7 @@ namespace UIApp
             CWL(cmd);
             string[] command = cmd.Split(' ');
             command[1] = command[1].TrimEnd(',');
-            List<string> wordRegistersList1 = new List<string> {"AX","BX", "CX", "DX", "SI", "DI", "BP", "SP"};
+            List<string> wordRegistersList1 = new List<string> { "AX", "BX", "CX", "DX", "SI", "DI", "BP", "SP" };
             List<string> wordRegistersList0 = new List<string> { "AH", "AL", "BH", "BL", "CH", "CL", "DH", "DL" };
             int? wordSize1;
             int? wordSize2;
@@ -232,7 +232,7 @@ namespace UIApp
             else
                 wordSize1 = null;
 
-            
+
 
             if (wordRegistersList1.Contains(command[2]))
                 wordSize2 = 1;
@@ -241,7 +241,7 @@ namespace UIApp
             else
                 wordSize2 = null;
 
-           
+
 
             if (wordSize1 == 1)
             {
@@ -384,17 +384,17 @@ namespace UIApp
             int EnumAddress(string cmdString)
             {
                 int address = 0;
-                List<string> wordRegistersList = new List<string> { "AX", "BX", "CX", "DX", "SI", "DI", "BP", "SP" };
+                List<string> wordRegistersList = new List<string> { "AX", "BX", "CX", "DX", "SI", "DI", "BP", "SP", "DISP" };
                 List<string> byteRegistersList = new List<string> { "AH", "AL", "BH", "BL", "CH", "CL", "DH", "DL" };
                 Regex hexReg = new Regex("[a-fA-F0-9]{4}");
                 //Direct addressing
                 if (cmdString[0] == '[' && cmdString[cmdString.Length - 1] == ']')
                 {
-                    
+
                     cmdString = cmdString.TrimStart('[').TrimEnd(']');
                     string[] temp = cmdString.Split('+');
 
-                    foreach(var el in temp)
+                    foreach (var el in temp)
                     {
                         if (hexReg.IsMatch(el))
                         {
@@ -428,6 +428,9 @@ namespace UIApp
                                     break;
                                 case "SP":
                                     address += cpu.Registers.GetRegisterValue(1, 0x07);
+                                    break;
+                                case "DISP":
+                                    address += DISP;
                                     break;
                                 default:
                                     break;
@@ -470,10 +473,9 @@ namespace UIApp
                         }
 
                     }
-                    
-                    
+
+
                 }
-                CWL(address.ToString());
                 return address;
             }
 
@@ -492,35 +494,44 @@ namespace UIApp
                             return;
                         }*/
                         //Register to register
-                        if(wordSize1 != null && wordSize2 != null)
+                        if (wordSize1 != null && wordSize2 != null)
                         {
-                            CWL(" > Register's value to register");
+                            CWL("[MOV] > Register's value to register");
                             cpu.Instructions.MOV((int)wordSize1, (int)wordSize2, (byte)firstRegCode, (byte)secoundRegCode);
                             UpdateRegisters();
                             return;
                         }
                         //Address's value to register
-                        if (wordSize1 != null && wordSize2 == null && command[2][0]=='[')
+                        if (wordSize1 != null && wordSize2 == null && command[2][0] == '[')
                         {
-                            CWL(" > Address's value to register");
+                            CWL("[MOV] > Address's value to register");
                             cpu.Instructions.MOV((int)wordSize1, (byte)firstRegCode, cpu.BusIU.GetWord(EnumAddress(command[2])));
                             UpdateRegisters();
                             return;
                         }
                         //Register's value to adress
-                        if (wordSize1 == null && command[1][0] == '[' && wordSize2 != null )
+                        if (wordSize1 == null && command[1][0] == '[' && wordSize2 != null)
                         {
-                            CWL(" > Register's value to adress");
-                            cpu.Instructions.MOV(EnumAddress(command[2]), cpu.Registers.GetRegisterValue((int)wordSize2, (byte)secoundRegCode));
+                            CWL("[MOV] > Register's value to adress");
+                            cpu.Instructions.MOV(EnumAddress(command[1]), cpu.Registers.GetRegisterValue((int)wordSize2, (byte)secoundRegCode));
                             UpdateRegisters();
                             return;
                         }
                         //Value to address's register's value
                         if (wordSize1 == null && command[1][0] == '[' && wordSize2 == null)
                         {
-                            CWL(" > Value to address's register's value");
+                            CWL("[MOV] > Value to address's register's value");
                             ushort value = Convert.ToUInt16(command[2], 16);
-                            cpu.Instructions.MOV(EnumAddress(command[1]),  value);
+                            cpu.Instructions.MOV(EnumAddress(command[1]), value);
+                            UpdateRegisters();
+                            return;
+                        }
+                        //Address's value to adress
+                        if (wordSize1 == null && command[1][0] == '[' && wordSize2 == null && command[2][0] == '[')
+                        {
+                            CWL("[MOV] > Address's value to adress");
+                            ushort value = cpu.BusIU.GetWord(EnumAddress(command[2]));
+                            cpu.Instructions.MOV(EnumAddress(command[1]), value);
                             UpdateRegisters();
                             return;
                         }
@@ -531,13 +542,35 @@ namespace UIApp
                             {
                                 ushort value = Convert.ToUInt16(command[2], 16);
                                 cpu.Instructions.MOV((int)wordSize1, (byte)firstRegCode, value);
-                                CWL(" > Value to register");
+                                CWL("[MOV] > Value to register");
                                 UpdateRegisters();
                             }
                             catch
                             {
                                 CWL("!!! Invalid value !!!");
                             }
+                            return;
+                        }
+
+                        break;
+                    }
+                case "XCHG":
+                    {
+                        //Register to register
+                        if (wordSize1 != null && wordSize2 != null)
+                        {
+                            CWL("[XCHG] > Register's value to register");
+                            cpu.Instructions.XCHG((int)wordSize1, (int)wordSize2, (byte)firstRegCode, (byte)secoundRegCode);
+                            UpdateRegisters();
+                            return;
+                        }
+
+                        //Address's value to register
+                        if (wordSize1 != null && wordSize2 == null && command[2][0] == '[')
+                        {
+                            CWL("[XCHG] > Address's value to register");
+                            cpu.Instructions.XCHG((int)wordSize1, (byte)firstRegCode, EnumAddress(command[2]));
+                            UpdateRegisters();
                             return;
                         }
 
@@ -554,6 +587,6 @@ namespace UIApp
             AssemblerCMD(CMD_TextBox.Text.ToUpper());
         }
 
-        
+
     }
 }

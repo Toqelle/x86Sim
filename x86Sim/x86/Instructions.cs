@@ -45,6 +45,20 @@ namespace x86
             BusIU.SaveWord(offset, (ushort)value);
         }
 
+        public void XCHG(int wordSize1, int wordSize2, byte reg1, byte reg2) //Register to register
+        {
+            var temp = Registers.GetRegisterValue(wordSize1, reg1);
+            Registers.SaveRegisterValue(wordSize1, reg1, Registers.GetRegisterValue(wordSize2, reg2));
+            Registers.SaveRegisterValue(wordSize2, reg2, temp);
+        }
+
+        public void XCHG(int wordSize1, byte reg1, int offset)
+        {
+            var value = BusIU.GetWord(offset);
+            Registers.SaveRegisterValue(wordSize1, reg1, value);
+            BusIU.SaveWord(offset, (ushort)Registers.GetRegisterValue(wordSize1, reg1));
+        }
+
 
 
 
