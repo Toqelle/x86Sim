@@ -55,8 +55,8 @@ namespace x86
         public void XCHG(int wordSize1, byte reg1, int offset)
         {
             var value = BusIU.GetWord(offset);
-            Registers.SaveRegisterValue(wordSize1, reg1, value);
             BusIU.SaveWord(offset, (ushort)Registers.GetRegisterValue(wordSize1, reg1));
+            Registers.SaveRegisterValue(wordSize1, reg1, value);
         }
 
 

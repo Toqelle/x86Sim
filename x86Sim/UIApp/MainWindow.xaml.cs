@@ -574,6 +574,24 @@ namespace UIApp
                             return;
                         }
 
+                        //Register value to adress
+                        if (wordSize2 != null && wordSize1 == null && command[1][0] == '[')
+                        {
+                            CWL("[XCHG] > Address's value to register");
+                            cpu.Instructions.XCHG((int)wordSize2, (byte)secoundRegCode, EnumAddress(command[1]));
+                            UpdateRegisters();
+                            return;
+                        }
+                        //Address's value to adress
+                        if (wordSize1 == null && command[1][0] == '[' && wordSize2 == null && command[2][0] == '[')
+                        {
+                            CWL("[XCHG] > Address's value to adress");
+                            ushort value = cpu.BusIU.GetWord(EnumAddress(command[2]));
+                            cpu.Instructions.MOV(EnumAddress(command[1]), value);
+                            UpdateRegisters();
+                            return;
+                        }
+
                         break;
                     }
             }
