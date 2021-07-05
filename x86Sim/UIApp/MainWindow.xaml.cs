@@ -20,6 +20,7 @@ namespace UIApp
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -31,6 +32,16 @@ namespace UIApp
         CPU cpu = new CPU();
         private ushort DISP = 0x0000;
         private string console_output = "";
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                /*AssemblerCMD(CMD_TextBox.Text.ToUpper());*/
+                Button_RunRun.Focus();
+                return;
+            }
+        }
 
         private void UpdateRegisters()
         {
@@ -216,7 +227,31 @@ namespace UIApp
         {
             cmd = cmd.Trim();
             CWL(cmd);
-            string[] command = cmd.Split(' ');
+            List<string> command = cmd.Split(' ').ToList();
+
+            try
+            {
+                if (command[0] == "PUSH" || command[0] == "POP" || command[0] == "MOV" || command[0] == "XCGH")
+                {
+
+                }
+                else
+                {
+                    CWL("!!! Invalid command !!!");
+                    return;
+                }
+            }
+            catch
+            {
+                CWL("!!! Invalid command !!!");
+                return;
+            }
+
+            if (command.Count < 2)
+            {
+                CWL("!!! No arguemnts !!!");
+                return;
+            }
             command[1] = command[1].TrimEnd(',');
             List<string> wordRegistersList1 = new List<string> { "AX", "BX", "CX", "DX", "SI", "DI", "BP", "SP" };
             List<string> wordRegistersList0 = new List<string> { "AH", "AL", "BH", "BL", "CH", "CL", "DH", "DL" };
@@ -225,22 +260,35 @@ namespace UIApp
             byte? firstRegCode = 0;
             byte? secoundRegCode = 0;
 
-            if (wordRegistersList1.Contains(command[1]))
-                wordSize1 = 1;
-            else if (wordRegistersList0.Contains(command[1]))
-                wordSize1 = 0;
-            else
+            
+
+            try
+            {
+                if (wordRegistersList1.Contains(command[1]))
+                    wordSize1 = 1;
+                else if (wordRegistersList0.Contains(command[1]))
+                    wordSize1 = 0;
+                else
+                    wordSize1 = null;
+            }
+            catch
+            {
                 wordSize1 = null;
+            }
+            try{
 
+                    if (wordRegistersList1.Contains(command[2]))
+                        wordSize2 = 1;
+                    else if (wordRegistersList0.Contains(command[2]))
+                        wordSize2 = 0;
+                    else
+                        wordSize2 = null;
 
-
-            if (wordRegistersList1.Contains(command[2]))
-                wordSize2 = 1;
-            else if (wordRegistersList0.Contains(command[2]))
-                wordSize2 = 0;
-            else
+            }
+            catch
+            {
                 wordSize2 = null;
-
+            }
 
 
             if (wordSize1 == 1)
@@ -388,6 +436,7 @@ namespace UIApp
                 List<string> byteRegistersList = new List<string> { "AH", "AL", "BH", "BL", "CH", "CL", "DH", "DL" };
                 Regex hexReg = new Regex("[a-fA-F0-9]{4}");
                 //Direct addressing
+                
                 if (cmdString[0] == '[' && cmdString[cmdString.Length - 1] == ']')
                 {
 
@@ -478,7 +527,7 @@ namespace UIApp
                 }
                 return address;
             }
-
+            
             switch (command[0])
             {
                 case "MOV":
@@ -594,6 +643,49 @@ namespace UIApp
 
                         break;
                     }
+                case "PUSH":
+                    {
+                        if(wordSize1 != null)
+                        {
+                            CWL("[PUSH] > Register's value to stack");
+                            cpu.Instructions.Push(Convert.ToUInt16(cpu.Registers.GetRegisterValue((int)wordSize1, (byte)firstRegCode)));
+                            UpdateRegisters();
+                            return;
+                        }
+                        if(wordSize1 == null && command[1][0] == '[')
+                        {
+                            CWL("[PUSH] > Adress value to stack");
+                            cpu.Instructions.Push(cpu.BusIU.GetWord(EnumAddress(command[1])));
+                            return;
+                        }
+                        CWL("[PUSH] > Invalid argument!");
+
+                        break;
+                    }
+                case "POP":
+                    {
+                        if (wordSize1 != null)
+                        {
+                            CWL("[POP] > Stack to register");
+                            cpu.Registers.SaveRegisterValue((int)wordSize1, (byte)firstRegCode, cpu.Instructions.Pop());
+                            UpdateRegisters();
+                            return;
+                        }
+
+                        if (wordSize1 == null)
+                        {
+                            CWL("[POP] > Stack value to adress");
+                            cpu.BusIU.SaveWord(EnumAddress(command[1]) ,cpu.Instructions.Pop());
+                            return;
+                        }
+
+                        CWL("[POP] > Invalid argument!");
+
+                        break;
+                    }
+                default:
+                    CWL("!!! Invalid command !!!");
+                    break;
             }
 
 
