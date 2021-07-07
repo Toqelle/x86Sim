@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "x86", "x86\x86.csproj", "{C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CLI", "CLI\CLI.csproj", "{64384365-051F-43FF-8786-2FAE0D309445}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIApp", "UIApp\UIApp.csproj", "{7B4DE70A-2673-4139-84FD-C026F59FA0DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "x86 Simulator", "UIApp\x86 Simulator.csproj", "{7B4DE70A-2673-4139-84FD-C026F59FA0DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

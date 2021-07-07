@@ -231,7 +231,7 @@ namespace UIApp
 
             try
             {
-                if (command[0] == "PUSH" || command[0] == "POP" || command[0] == "MOV" || command[0] == "XCGH")
+                if (command[0] == "PUSH" || command[0] == "POP" || command[0] == "MOV" || command[0] == "XCHG")
                 {
 
                 }
