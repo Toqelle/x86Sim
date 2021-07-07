@@ -215,6 +215,13 @@ namespace UIApp
             }
         }
 
+        private void CLS()
+        {
+            console_output = "Output cleaned! \n";
+            ConsoleOutput_TextBlock.Text = console_output;
+            ConsoleOutput_TextBlock.ScrollToEnd();
+        }
+
         private void CWL(string text) //Console write line
         {
             console_output += $"{text} \n";
@@ -231,7 +238,7 @@ namespace UIApp
 
             try
             {
-                if (command[0] == "PUSH" || command[0] == "POP" || command[0] == "MOV" || command[0] == "XCHG")
+                if (command[0] == "PUSH" || command[0] == "POP" || command[0] == "MOV" || command[0] == "XCHG" || command[0] == "CLS")
                 {
 
                 }
@@ -247,8 +254,15 @@ namespace UIApp
                 return;
             }
 
-            if (command.Count < 2)
+            if ( command.Count < 2)
             {
+                if (command[0] == "CLS")
+                {
+                    CLS();
+                    return;
+                }
+            
+                    
                 CWL("!!! No arguemnts !!!");
                 return;
             }
